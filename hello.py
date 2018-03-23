@@ -1,16 +1,39 @@
-
 import os
 
-from flask import Flask, url_for, request, abort, jsonify, render_template
+from flask import Flask, url_for, request, abort, jsonify, render_template, redirect, flash
 
 app = Flask(__name__)
 
-@app.route('/chacal')
-@app.route('/chacal/<test>', methods=['GET'])
-def index(test = None):
+
+@app.route('/', endpoint='start')
+@app.route('/login', methods=['POST'])
+def login():
+    error = None
+    retorno = render_template('login.html')
+    if request.method == 'POST':
+        user = request.values['user']
+        hash_pass = request.values['hashPass']
+
+        if valid_login(user, hash_pass):
+            flash("succesfully logged in")
+            retorno =  redirect(url_for('index', test=user))
+        else:
+            flash('Incorrect user and password')
+            retorno = redirect(url_for('start'))
+
+    return retorno
+
+
+
+
+@app.route('/chacal/<test>')
+def index(test=None):
     # import pdb; pdb.set_trace()
     return render_template("index.html", test_t=test)
 
+
+def valid_login(user,password):
+    return user == password
 
 @app.route('/testme', methods=['POST'])
 def test_get():
@@ -37,8 +60,12 @@ def show_post(post_id):
 #         abort(400)
 
 
-if __name__ == '__main__':
-    host = os.getenv("IP", "0.0.0.0")
-    port = int(os.getenv("PORT", 3000))
-    app.debug = True
-    app.run(host=host, port=port)
+def start():
+    if __name__ == '__main__':
+        host = os.getenv("IP", "0.0.0.0")
+        port = int(os.getenv("PORT", 3000))
+        app.debug = True
+        app.secret_key = "xablau"
+        app.run(host=host, port=port)
+
+start()

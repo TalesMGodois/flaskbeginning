@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>entrar</title>
+</head>
+
+
+<style>
+    form {
+        font-size: 2em;
+    }
+
+    .btn {
+        width: 300px;
+    }
+
+</style>
+<body>
+
+
+
+    <form action="/login" method="POST" novalidate>
+        <p>
+            Login : <input name="user" type="email">
+        </p>
+        <p>
+            Password: <input name="hashPass" type="password">
+        </p>
+
+        <button type="submit" class="btn">
+
+            Entrar
+        </button>
+
+    </form>
+
+    {% with  messages  = get_flashed_messages() %}
+
+    {% if messages %}
+    <ul>
+        {%for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+
+    {% endif %}
+
+    {% endwith %}
+
+</body>
+</html>
